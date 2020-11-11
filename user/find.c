@@ -30,6 +30,7 @@ void eq_print(char *fileName, char *findName){
 	在某路径中查找某文件
 */
 void find(char *path, char *findName){
+
 	int fd;
 	struct stat st;	
 	if((fd = open(path, O_RDONLY)) < 0){
@@ -73,6 +74,8 @@ int main(int argc, char *argv[]){
 		printf("find: find <path> <fileName>\n");
 		exit();
 	}
+	printf("%s,%s",argv[1],argv[2]);
 	find(argv[1], argv[2]);
+
 	exit();
 }
