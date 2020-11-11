@@ -5,7 +5,10 @@
 #include "kernel/fs.h"
 #include "user/user.h"
 
-char* fmt_name(char *path){
+
+char*
+fmt_name(char *path)
+{
   static char buf[DIRSIZ+1];
   char *p;
 
@@ -21,26 +24,32 @@ void eq_print(char *fileName, char *findName){
 		printf("%s\n", fileName);
 	}
 }
-
+/*
+	在某路径中查找某文件
+*/
 void find(char *path, char *findName){
 
+	char buf[512], *p;
 	int fd;
-	struct stat st;	
+	struct dirent de;
+	struct stat st;
+
 	if((fd = open(path, O_RDONLY)) < 0){
 		fprintf(2, "find: cannot open %s\n", path);
 		return;
 	}
+
 	if(fstat(fd, &st) < 0){
 		fprintf(2, "find: cannot stat %s\n", path);
 		close(fd);
 		return;
 	}
-	char buf[512], *p;	
-	struct dirent de;
+
 	switch(st.type){	
 		case T_FILE:
 			eq_print(path, findName);			
 			break;
+
 		case T_DIR:
 			if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
 				printf("find: path too long\n");
@@ -66,8 +75,6 @@ int main(int argc, char *argv[]){
 		printf("find: find <path> <fileName>\n");
 		exit();
 	}
-	printf("%s,%s",argv[1],argv[2]);
 	find(argv[1], argv[2]);
-
 	exit();
 }
