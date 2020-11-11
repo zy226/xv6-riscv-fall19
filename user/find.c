@@ -5,9 +5,6 @@
 #include "kernel/fs.h"
 #include "user/user.h"
 
-/*
-	将路径格式化为文件名
-*/
 char* fmt_name(char *path){
   static char buf[DIRSIZ+1];
   char *p;
@@ -18,17 +15,13 @@ char* fmt_name(char *path){
   memmove(buf, p, strlen(p)+1);
   return buf;
 }
-/*
-	系统文件名与要查找的文件名，若一致，打印系统文件完整路径
-*/
+
 void eq_print(char *fileName, char *findName){
 	if(strcmp(fmt_name(fileName), findName) == 0){
 		printf("%s\n", fileName);
 	}
 }
-/*
-	在某路径中查找某文件
-*/
+
 void find(char *path, char *findName){
 
 	int fd;
@@ -57,7 +50,6 @@ void find(char *path, char *findName){
 			p = buf+strlen(buf);
 			*p++ = '/';
 			while(read(fd, &de, sizeof(de)) == sizeof(de)){
-				//printf("de.name:%s, de.inum:%d\n", de.name, de.inum);
 				if(de.inum == 0 || de.inum == 1 || strcmp(de.name, ".")==0 || strcmp(de.name, "..")==0)
 					continue;				
 				memmove(p, de.name, strlen(de.name));

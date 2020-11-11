@@ -1,13 +1,6 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
-void source() {
-  int i;
-  for (i = 2; i < 36; i++) {
-    write(1, &i, sizeof(i));
-  }
-}
-
 void cull(int p) {
   int n;
   while (read(0, &n, sizeof(n))) {
@@ -40,17 +33,20 @@ void sink() {
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
 
   int pd[2];
+  int i;
   pipe(pd);
-  if (fork()) {
-    redirect(0, pd);
-    sink();
+  if (fork() == 0) {
+    redirect(1, pd);
+    for (i = 2; i < 36; i++) {
+    write(1, &i, sizeof(i));
+  }
   }
   else{
-    redirect(1, pd);
-    source();
+    redirect(0, pd);
+    sink();
   }
   exit();
 }
